@@ -23,7 +23,7 @@ search algorithm that expands node with the lowest values of *g(n) + h(n)*
 - keep moving to the minimal `cost of path until now + estimated cost to the goal` = *g(n) + h(n)*
 - example
 
-![example](a-search.png)
+![example](maze/a-search.png)
 
 ### Optimal if
 
@@ -97,7 +97,7 @@ way to optimize minimax
 - ignore the action if that have possibility of bringing opponent better score than the already established action
 
 example
-![ex](alpha-beta.png)
+![ex](maze/alpha-beta.png)
 
 - the player is `MAX`
 - opponent is `MIN`

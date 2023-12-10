@@ -70,7 +70,7 @@ a data structure that keeps track of
 - can cause infinite loop
 
 ***
-![path finding problem](path-finding-loop.png)
+![path finding problem](img/path-finding-loop.png)
 
 ***
 
@@ -103,13 +103,13 @@ a data structure that keeps track of
 #### Example
 
 ***
-![path finding problem](path-finding.png)
+![path finding problem](img/path-finding.png)
 
 ***
 
 - frontier: `A` -> `B, D` -> `B, E` -> `B` -> `C` -> empty
 
-![solution](maze-depth.png)
+![solution](img/maze-depth.png)
 
 - `yellow`: the solution
 - `red`: explored but not part of the solution
@@ -131,13 +131,13 @@ a data structure that keeps track of
 #### Example
 
 ***
-![path finding problem](path-finding.png)
+![path finding problem](img/path-finding.png)
 
 ***
 
 - frontier: `A` -> `B, D` -> `D, C` -> `C, E` -> `E` -> empty
 
-![solution](maze-breadth.png)
+![solution](img/maze-breadth.png)
 
 - takes one step in each possible direction before taking a second step in any one direction
 
