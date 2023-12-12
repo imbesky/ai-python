@@ -135,9 +135,11 @@ def minimax(board):
         if node.move >= minimum_move and minimum_move is not 0:
             continue
 
-        if terminal(node.board) and winner(node.board) == current_player:
-            optimal_action = node.root_action
-            minimum_move = node.move
+        if terminal(node.board):
+            if winner(node.board) == current_player:
+                optimal_action = node.root_action
+                minimum_move = node.move
+                continue
             continue
 
         for action in actions(node.board):
