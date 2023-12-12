@@ -3,6 +3,7 @@ Tic Tac Toe Player
 """
 
 import math
+import util
 
 X = "X"
 O = "O"
@@ -115,3 +116,32 @@ def minimax(board):
     """
     if terminal(board):
         return None
+
+    frontier = util.StackFrontier()
+    current_player = player(board)
+    optimal_action = None
+    minimum_move = 0
+
+    initial_actions = actions(board)
+    for action in initial_actions:
+        frontier.push(util.Node(action, action, 1, result(board, action)))
+
+    while frontier.size() is not 0:
+        node = frontier.pop()
+
+        if node.move >= minimum_move and minimum_move is not 0:
+            continue
+
+        if terminal(node.board) and winner(node.board) == current_player:
+            optimal_action = node.root_action
+            minimum_move = node.move
+            continue
+
+        for action in actions(node.board):
+            frontier.push(
+                util.Node(action, node.root_action, node.move + 1, result(node.board, action)))
+
+    if optimal_action is None:
+        return initial_actions[0]
+
+    return optimal_action
