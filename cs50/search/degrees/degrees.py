@@ -113,6 +113,8 @@ def shortest_path(source, target):
             if neighbor not in explored and not frontier.contains_state(neighbor):
                 frontier.push(Node(state=neighbor, path=node.path + [neighbor]))
 
+    if len(current_path) == 0:
+        return None
     return current_path
 
 
