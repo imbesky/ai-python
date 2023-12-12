@@ -1,15 +1,14 @@
 class Node():
-    def __init__(self, state, parent, action):
+    def __init__(self, state, path):
         self.state = state
-        self.parent = parent
-        self.action = action
+        self.path = path
 
 
 class StackFrontier():
     def __init__(self):
         self.frontier = []
 
-    def add(self, node):
+    def push(self, node):
         self.frontier.append(node)
 
     def contains_state(self, state):
@@ -18,13 +17,16 @@ class StackFrontier():
     def empty(self):
         return len(self.frontier) == 0
 
-    def remove(self):
+    def pop(self):
         if self.empty():
             raise Exception("empty frontier")
         else:
             node = self.frontier[-1]
             self.frontier = self.frontier[:-1]
             return node
+
+    def size(self):
+        return len(self.frontier)
 
 
 class QueueFrontier(StackFrontier):

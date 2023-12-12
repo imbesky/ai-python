@@ -91,10 +91,29 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+    frontier = StackFrontier()
+    explored = set()
+    current_path = []
 
+    frontier.push(Node(state=(None, source), path=[]))
 
-    # TODO
-    raise NotImplementedError
+    while frontier.size() != 0:
+        node = frontier.pop()
+
+        if len(node.path) >= len(current_path) & len(current_path) != 0:
+            continue
+
+        if node.state[1] == target:
+            current_path = node.path
+            continue
+
+        explored.add(node.state)
+
+        for neighbor in neighbors_for_person(node.state[1]):
+            if neighbor not in explored and not frontier.contains_state(neighbor):
+                frontier.push(Node(state=neighbor, path=node.path + [neighbor]))
+
+    return current_path
 
 
 def person_id_for_name(name):
