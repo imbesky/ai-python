@@ -92,6 +92,9 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
+    if winner(board) is not None:
+        return True
+
     if blank_of(board) is not 0:
         return False
 
