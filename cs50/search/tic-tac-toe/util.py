@@ -1,9 +1,9 @@
 class Node():
-    def __init__(self, action, root_action, move, board):
-        self.action = action
+    def __init__(self, root_action, move, board, player):
         self.root_action = root_action
         self.move = move
         self.board = board
+        self.player = player
 
 
 class StackFrontier():

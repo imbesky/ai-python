@@ -1,12 +1,15 @@
 """
 Tic Tac Toe Player
 """
-
+import copy
 import math
+import random
+
 import util
 
 X = "X"
 O = "O"
+players = [X, O]
 EMPTY = None
 
 
@@ -32,7 +35,7 @@ def player(board):
     """
     Returns player who has the next turn on a board.
     """
-    if math.remainder(blank_of(board), 2) == 1:
+    if blank_of(board) % 2 == 1:
         return X
     return O
 
@@ -49,15 +52,19 @@ def actions(board):
     return possible
 
 
+def accept_action(target_player, board, action):
+    if board[action[0]][action[1]] != EMPTY:
+        raise AttributeError('invalid action')
+    result_board = copy.deepcopy(board)
+    result_board[action[0]][action[1]] = target_player
+    return result_board
+
+
 def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
-    if board[action[0]][action[1]] is not EMPTY:
-        return AttributeError('invalid action')
-    result_board = board
-    result_board[action[0]][action[1]] = player(board)
-    return result_board
+    return accept_action(player(board), board, action)
 
 
 def winner(board):
@@ -65,24 +72,26 @@ def winner(board):
     Returns the winner of the game, if there is one.
     """
     for row in board:
-        if row.count(row[0]) == len(row):
+        if row.count(row[0]) == len(row) and row[0] != EMPTY:
             return row[0]
 
-    for index in board[0]:
+    for index in range(len(board[0])):
         column = []
         for row in board:
             column.append(row[index])
-        if column.count(column[0]) == len(column):
+        if column.count(column[0]) == len(column) and column[0] != EMPTY:
             return column[0]
 
     right_diagonal = []
     left_diagonal = []
     for index in range(len(board)):
         right_diagonal.append(board[index][index])
-        left_diagonal.append(board[index][len(board[index]) - index])
-    if right_diagonal.count(right_diagonal[0]) == len(right_diagonal):
+        left_diagonal.append(board[index][len(board[index]) - index - 1])
+    if right_diagonal.count(right_diagonal[0]) == len(right_diagonal)\
+            and right_diagonal[0] != EMPTY:
         return right_diagonal[0]
-    if left_diagonal.count(left_diagonal[0]) == len(left_diagonal):
+    if left_diagonal.count(left_diagonal[0]) == len(left_diagonal) \
+            and left_diagonal[0] != EMPTY:
         return left_diagonal[0]
 
     return None
@@ -95,7 +104,7 @@ def terminal(board):
     if winner(board) is not None:
         return True
 
-    if blank_of(board) is not 0:
+    if blank_of(board) != 0:
         return False
 
     return True
@@ -113,6 +122,12 @@ def utility(board):
     return 0
 
 
+def switch_player(current_player):
+    for candidate in players:
+        if current_player != candidate:
+            return candidate
+
+
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
@@ -122,31 +137,46 @@ def minimax(board):
 
     frontier = util.StackFrontier()
     current_player = player(board)
-    optimal_action = None
+    winnable_actions = []
+    winnable_actions_set = set()
     minimum_move = 0
 
     initial_actions = actions(board)
     for action in initial_actions:
-        frontier.push(util.Node(action, action, 1, result(board, action)))
+        frontier.push(
+            util.Node(action, 1,
+                      accept_action(current_player, board, action), current_player))
 
-    while frontier.size() is not 0:
+    while frontier.size() != 0:
         node = frontier.pop()
 
-        if node.move >= minimum_move and minimum_move is not 0:
+        if node.move > minimum_move != 0:
             continue
 
-        if terminal(node.board):
-            if winner(node.board) == current_player:
-                optimal_action = node.root_action
-                minimum_move = node.move
-                continue
+        win = winner(node.board)
+        if win is None and blank_of(node.board) == 0:
+            continue
+        if win is not None and win == current_player:
+            winnable_actions.append(node.root_action)
+            minimum_move = node.move
             continue
 
+        next_player = switch_player(node.player)
         for action in actions(node.board):
             frontier.push(
-                util.Node(action, node.root_action, node.move + 1, result(node.board, action)))
+                util.Node(node.root_action, node.move + 1,
+                          accept_action(next_player, node.board, action),
+                          next_player))
 
-    if optimal_action is None:
+    if len(winnable_actions) == 0:
         return initial_actions[0]
+
+    optimal_action = None
+    max_frequency = 0
+    for action in initial_actions:
+        this_frequency = winnable_actions.count(action)
+        if this_frequency > max_frequency:
+            max_frequency = this_frequency
+            optimal_action = action
 
     return optimal_action
