@@ -16,6 +16,17 @@ class MyTestCase(unittest.TestCase):
     def test_player(self):
         self.assertEqual(tictactoe.player(tictactoe.initial_state()), tictactoe.X)
 
+    def test_player2(self):
+        EMPTY = tictactoe.EMPTY
+        X = tictactoe.X
+        O = tictactoe.O
+
+        board = [[X, EMPTY, EMPTY],
+                 [EMPTY, O, EMPTY],
+                 [EMPTY, EMPTY, EMPTY]]
+
+        self.assertEqual(tictactoe.player(board), tictactoe.X)
+
     def test_switch_player(self):
         self.assertEqual(tictactoe.switch_player(tictactoe.X), tictactoe.O)
 
@@ -106,6 +117,10 @@ class MyTestCase(unittest.TestCase):
                  [EMPTY, EMPTY, EMPTY]]
 
         self.assertEqual(tictactoe.minimax(board), (0,1))
+
+    def test_minimax_initial(self):
+        expectations = [(0, 0), (0, 2), (2, 0), (2, 2)]
+        self.assertIn(tictactoe.minimax(tictactoe.initial_state()), expectations)
 
 if __name__ == '__main__':
     unittest.main()
