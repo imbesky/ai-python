@@ -2,8 +2,6 @@
 Tic Tac Toe Player
 """
 import copy
-import math
-import random
 
 import util
 
@@ -138,11 +136,10 @@ def minimax(board):
     frontier = util.StackFrontier()
     current_player = player(board)
     winnable_actions = []
-    winnable_actions_set = set()
     minimum_move = 0
+    root_actions = actions(board)
 
-    initial_actions = actions(board)
-    for action in initial_actions:
+    for action in root_actions:
         frontier.push(
             util.Node(action, 1,
                       accept_action(current_player, board, action), current_player))
@@ -169,11 +166,11 @@ def minimax(board):
                           next_player))
 
     if len(winnable_actions) == 0:
-        return initial_actions[0]
+        return root_actions[0]
 
     optimal_action = None
     max_frequency = 0
-    for action in initial_actions:
+    for action in root_actions:
         this_frequency = winnable_actions.count(action)
         if this_frequency > max_frequency:
             max_frequency = this_frequency
