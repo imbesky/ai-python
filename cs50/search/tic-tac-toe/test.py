@@ -27,9 +27,6 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual(tictactoe.player(board), tictactoe.X)
 
-    def test_switch_player(self):
-        self.assertEqual(tictactoe.switch_player(tictactoe.X), tictactoe.O)
-
     def test_winner_row(self):
         EMPTY = tictactoe.EMPTY
         X = tictactoe.X
