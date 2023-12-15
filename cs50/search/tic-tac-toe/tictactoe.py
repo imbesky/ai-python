@@ -186,10 +186,6 @@ def minimax(board):
         for action in not_losable_actions:
             frontier.push(util.Node(node.root_action, node.move + 1, result(node.board, action)))
 
-    # print('winnable: ', winnable_actions)
-    # print('drawable: ', drawable_actions)
-    # print('losable: ', losable_actions)
-
     max_count = 0
     optimal_action = None
 
