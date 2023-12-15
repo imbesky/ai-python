@@ -2,7 +2,6 @@
 Tic Tac Toe Player
 """
 import copy
-import random
 
 import util
 
