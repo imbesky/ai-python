@@ -7,7 +7,7 @@ dumbledore = Symbol("dumbledore")
 knowledge = And(
     Implication(Not(rain), hagrid),
     Or(hagrid, dumbledore),
-    Not(And(hagrid, dumbledore)),
+    Not(And(hagrid, dumbledore)), # to implement XOR
     dumbledore
 )
 
