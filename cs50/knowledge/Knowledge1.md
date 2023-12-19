@@ -121,6 +121,7 @@ a set of sentences known by a knowledge-based agents
 - any world where α is true, β is true
 
 ## Inference
+
 the process of deriving new sentences from old ones
 
 - its ultimate goal is to know whether *`KB(knowledge base) ⊨ α`* is true or false
