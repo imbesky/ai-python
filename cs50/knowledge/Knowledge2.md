@@ -258,3 +258,23 @@ to determine if KB ⊨ α:
 - keep checking to see if we can use resolution to produce a new clause
   - if produce the empty clause, equivalent to `False`; arrived at a contradiction `KB ⊨ α`
   - if contradiction is not achieved and no more clauses can be inferred, there is no entailment
+
+## First-order logic
+
+- constant symbol: represent objects
+- predicated symbol: relations or functions that take an argument and return a true or false value
+
+### Universal quantification
+
+express an idea that is true for all the valuable
+
+- `∀`: for all
+- ∀x. Species(x, human) -> ¬Species(x, elephant)
+
+### Existential quantification
+
+some expression is going to be true for at least one value
+
+- `∃`
+- ∃x. House(x) ∧ BelongsTo(Minerva, x)
+
