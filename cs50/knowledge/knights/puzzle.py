@@ -9,24 +9,46 @@ BKnave = Symbol("B is a Knave")
 CKnight = Symbol("C is a Knight")
 CKnave = Symbol("C is a Knave")
 
+A = {'knight': AKnight, 'knave': AKnave}
+B = {'knight': BKnight, 'knave': BKnave}
+C = {'knight': CKnight, 'knave': CKnave}
+
+
+def XOr(p, q):
+    return And(Or(p, q), Not(And(p, q)))
+
+
+def asserted(speaker, sentence):
+    return And(
+        Implication(speaker['knight'], sentence),
+        Implication(speaker['knave'], Not(sentence))
+    )
+
+
 # Puzzle 0
 # A says "I am both a knight and a knave."
 knowledge0 = And(
-    # TODO
+    XOr(AKnight, AKnave),
+    asserted(A, And(AKnight, AKnave))
 )
 
 # Puzzle 1
 # A says "We are both knaves."
 # B says nothing.
 knowledge1 = And(
-    # TODO
+    XOr(AKnight, AKnave),
+    XOr(BKnight, BKnave),
+    asserted(A, And(AKnave, BKnave))
 )
 
 # Puzzle 2
 # A says "We are the same kind."
 # B says "We are of different kinds."
 knowledge2 = And(
-    # TODO
+    XOr(AKnight, AKnave),
+    XOr(BKnight, BKnave),
+    asserted(A, Or(And(AKnight, BKnight), And(AKnave, BKnave))),
+    asserted(B, And(Not(And(AKnight, BKnight)), Not(And(AKnave, BKnave))))
 )
 
 # Puzzle 3
@@ -35,7 +57,13 @@ knowledge2 = And(
 # B says "C is a knave."
 # C says "A is a knight."
 knowledge3 = And(
-    # TODO
+    XOr(AKnight, AKnave),
+    XOr(BKnight, BKnave),
+    XOr(CKnight, CKnave),
+    Or(asserted(A, AKnight), asserted(A, AKnave)),
+    asserted(B, asserted(A, BKnave)),
+    asserted(B, CKnave),
+    asserted(C, AKnight)
 )
 
 
