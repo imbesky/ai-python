@@ -269,6 +269,7 @@ class MinesweeperAI():
         for safe in self.safes:
             if safe not in self.moves_made:
                 return safe
+        return None
 
     def make_random_move(self):
         """
@@ -280,3 +281,4 @@ class MinesweeperAI():
         for h, w in itertools.product(range(self.height), range(self.width)):
             if (h, w) not in self.moves_made and (h, w) not in self.mines:
                 return h, w
+        return None
