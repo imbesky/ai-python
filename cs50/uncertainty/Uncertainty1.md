@@ -135,10 +135,13 @@ P(C|rain)
 
 *`P(a) = P(a, b) + P(a, ¬b)`*
 
-![img](marginalization1.png)
+![img](marginalization.png)
+- `j` is every possible world
+- so `Yj` can be `y`, `¬y`
+- 밑에 conditioning에서도 마찬가지
 
 #### Conditioning
 
 *`P(a) = P(a | b)P(b) + P(a | ¬b)P(¬b)`*
 
-![img](marginalization2.png)
+![img](conditioning.png)
