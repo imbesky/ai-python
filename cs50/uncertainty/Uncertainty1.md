@@ -32,8 +32,9 @@ degree of belief in a proposition given some evidence that has already been reve
 *`P(a|b)`*
 
 -*`a`*: the world we want to know the probability
+
 -*`b`*: evidence; information that we already know for certain; true
-- example: *`P(today weather | tomorrow weather)`*
+- example: *`P(tomorrow weather | today weather)`*
 
 ### Calculation
 
@@ -85,6 +86,7 @@ both of them are true; so,
 therefore,
 
 *`P(b|a) = P(b)P(a|b) / P(a)`*
+
 *`P(a|b) = P(a)P(b|a) / P(b)`*
 
 #### Generalization
@@ -127,7 +129,7 @@ P(C|rain)
 
 *`P(a ∨ b) = P(a) + P(b) - P(a ∧ b)`*
 
-- *`- P(a^b)`* 는 *`P(a)`*와 *`P(b)`*의 교집합만큼 중복된 부분을 빼주는 것; remove double-counted
+- *`- P(a^b)`* 는 *`P(a)`* 와 *`P(b)`* 의 교집합만큼 중복된 부분을 빼주는 것; remove double-counted
 
 ### Marginalization
 
