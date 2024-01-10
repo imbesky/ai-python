@@ -58,18 +58,17 @@ def transition_model(corpus, page, damping_factor):
     a link at random chosen from all pages in the corpus.
     """
     result = dict()
-    for c in corpus:
-        result[c] = 0
     linked = len(corpus[page])
+    total = len(corpus)
 
     if linked != 0:
-        for p in result:
-            result[p] += (1 - damping_factor) / len(corpus)
+        for p in corpus:
+            result[p] = (1 - damping_factor) / total
             if p in corpus[page]:
                 result[p] += damping_factor / linked
     elif linked == 0:
-        for p in result:
-            result[p] = 1 / len(corpus)
+        for p in corpus:
+            result[p] = 1 / total
 
     return result
 
@@ -81,27 +80,32 @@ def sample_pagerank(corpus, damping_factor, n):
 
     Return a dictionary where keys are page names, and values are
     their estimated PageRank value (a value between 0 and 1). All
-    PageRank values should sum to
+    PageRank values should sum to 1
     """
-    visited = []
+    result = dict()
     pages = []
     for c in corpus:
+        result[c] = 0
         pages.append(c)
 
-    def next_page(current_page):
+    def next_page(target_page):
         probabilities = []
-        transition = transition_model(corpus, current_page, damping_factor)
+        transition = transition_model(corpus, target_page, damping_factor)
         for p in corpus:
             probabilities.append(transition[p])
         return random.choices(pages, probabilities)[0]
 
-    visited.append(random.choices(pages)[0])
+    current_page = random.choices(pages)[0]
+    result[current_page] += 1
     for i in range(n - 1):
-        visited.append(next_page(visited[len(visited) - 1]))
+        current_page = next_page(current_page)
+        result[current_page] += 1
 
-    result = dict()
+    visited = 0
     for c in corpus:
-        result[c] = visited.count(c) / len(visited)
+        visited += result[c]
+    for c in corpus:
+        result[c] /= visited
     return result
 
 
@@ -115,17 +119,19 @@ def iterate_pagerank(corpus, damping_factor):
     PageRank values should sum to 1.
     """
     page_ranks = dict()
+    total = len(corpus)
     for c in corpus:
-        page_ranks[c] = 1 / len(corpus)
+        page_ranks[c] = 1 / total
 
     def calculate_pagerank(page):
-        pr = (1 - damping_factor) / len(corpus)
+        probability = (1 - damping_factor) / total
         for other_page in corpus:
-            if len(corpus[other_page]) != 0 and page in corpus[other_page]:
-                pr += page_ranks[other_page] / len(corpus[other_page])
-            else:
-                pr += page_ranks[other_page] / len(corpus)
-        return pr
+            linked = len(corpus[other_page])
+            if linked != 0 and page in corpus[other_page]:
+                probability += damping_factor * (page_ranks[other_page] / linked)
+            elif linked == 0:
+                probability += damping_factor * (page_ranks[other_page] / total)
+        return probability
 
     while True:
         pr_sum = 0
@@ -135,7 +141,7 @@ def iterate_pagerank(corpus, damping_factor):
             new_pr[p] = new
             pr_sum += new
         done = 0
-        for p in new_pr:
+        for p in page_ranks:
             new = new_pr[p] / pr_sum
             if abs(new - page_ranks[p]) < 0.001:
                 done += 1
