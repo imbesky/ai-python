@@ -130,82 +130,47 @@ def joint_probability(people, one_gene, two_genes, have_trait):
     """
     Compute and return a joint probability.
     """
-    joint = dict()
-    inherit = {
-        0: 0,
-        1: 0.5,
-        2: 1
-    }
+    joint = 1
 
-    def inheritance(mother, father): # 부모에게서 n개의 gene이 유전되었을 확률
-        result = dict()
-        mother_chance = 0
-        father_chance = 0
-        for i in range(3):
-            mother_chance += mother[i] * (inherit[i] * (1 - PROBS["mutation"]) + (1 - inherit[i]) * PROBS["mutation"])
-            father_chance += father[i] * (inherit[i] * (1 - PROBS["mutation"]) + (1 - inherit[i]) * PROBS["mutation"])
-        result[0] = (1 - mother_chance) * (1 - father_chance)
-        result[1] = mother_chance * (1 - father_chance) + (1 - mother_chance) * father_chance
-        result[2] = mother_chance * father_chance
-        return result
+    def inherit(num):
+        if num == 0:
+            return PROBS["mutation"]
+        elif num == 2:
+            return 1 - PROBS["mutation"]
+        else:
+            return PROBS["mutation"] / 2 + (1 - PROBS["mutation"]) / 2
 
-    def gene_number(target): # gene이 n 개일 확률
-        gene_prob = dict()
-        mother_trait = people[target["mother"]]["trait"] if target["mother"] in people else None
-        father_trait = people[target["father"]]["trait"] if target["father"] in people else None
-        if mother_trait is not None and father_trait is not None:
-            inherited = inheritance(gene_number(people[target["mother"]]), gene_number(people[target["father"]]))
-            for i in range(3):
-                gene_prob[i] = inherited[i]
-        elif mother_trait is not None or father_trait is not None:
-            known = people[target["mother"]] if mother_trait is not None else people[target["father"]]
-            inherited = inheritance(gene_number(known), PROBS["gene"])
-            for i in range(3):
-                gene_prob[i] = inherited[i]
-        elif target["trait"] is not None:  # 자신의 trait을 알 때
-            for i in range(3):
-                gene_prob[i] = PROBS["trait"][i][target["trait"]] / PROBS["gene"][i]
-        else:  # 아는 정보가 없을 때
-            for i in range(3):
-                gene_prob[i] = PROBS["gene"][i]
-        return gene_prob
+    def gene(target):
+        if target in one_gene:
+            return 1
+        elif target in two_genes:
+            return 2
+        else:
+            return 0
 
-    def trait_assumption(gene, target_trait):
-        result = 0
-        """
-        trait 이 t일 확률= ["target"][n][t] / gene_prob[n] 의 합(n = 0~2)
-        """
-        for i in range(3):
-            result += PROBS["trait"][i][target_trait] / gene[i]
-        return result
+    def trait(target):
+        if target in have_trait:
+            return True
+        else:
+            return False
+
+    def gene_prob(num):
+        if people[person]["mother"] is not None and people[person]["father"] is not None:
+            mother = inherit(gene(people[person]["mother"]))
+            father = inherit(gene(people[person]["father"]))
+            if num == 0:
+                return (1 - mother) * (1 - father)
+            elif num == 1:
+                return mother * (1 - father) + (1 - mother) * father
+            else:
+                return mother * father
+        else:
+            return PROBS["gene"][num]
 
     for person in people:
-        joint[person] = {}
-        # 1. 예상되는 gene의 각 확률 구함
-        genes = gene_number(people[person])
-
-        if person in one_gene:
-            joint[person]["gene"] = genes[1]
-        elif person in two_genes:
-            joint[person]["gene"] = genes[2]
-        else:
-            joint[person]["gene"] = genes[0]
-
-        trait = people[person]["trait"]
-        if person in have_trait:
-            if trait is None:
-                joint[person]["trait"] = trait_assumption(genes, True)
-            elif trait:
-                joint[person]["trait"] = 1
-            else:
-                joint[person]["trait"] = 0
-        else:
-            if trait is None:
-                joint[person]["trait"] = trait_assumption(genes, False)
-            elif trait:
-                joint[person]["trait"] = 0
-            else:
-                joint[person]["trait"] = 1
+        this_gene = gene(person)
+        this_trait = trait(person)
+        joint *= gene_prob(this_gene) * PROBS["trait"][this_gene][this_trait]
 
     return joint
 
@@ -217,18 +182,24 @@ def update(probabilities, one_gene, two_genes, have_trait, p):
     Which value for each distribution is updated depends on whether
     the person is in `have_gene` and `have_trait`, respectively.
     """
-    for person in probabilities:
-        if person in one_gene:
-            probabilities[person]["gene"][1] = p[person]["gene"]
-        elif person in two_genes:
-            probabilities[person]["gene"][2] = p[person]["gene"]
-        else:
-            probabilities[person]["gene"][0] = p[person]["gene"]
 
-        if person in have_trait:
-            probabilities[person]["trait"][True] = p[person]["trait"]
+    def gene(target):
+        if target in one_gene:
+            return 1
+        elif target in two_genes:
+            return 2
         else:
-            probabilities[person]["trait"][False] = p[person]["trait"]
+            return 0
+
+    def trait(target):
+        if target in have_trait:
+            return True
+        else:
+            return False
+
+    for person in probabilities:
+        probabilities[person]["trait"][trait(person)] += p
+        probabilities[person]["gene"][gene(person)] += p
 
 
 def normalize(probabilities):
