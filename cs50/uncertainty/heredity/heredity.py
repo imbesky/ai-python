@@ -150,21 +150,10 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         return result
 
     def gene_number(target): # gene이 n 개일 확률
-        # TODO: 우선순위 고려
-        """
-        부모 양쪽의 trait
-        자신의 trait
-        어느 쪽이 먼저?
-        """
         gene_prob = dict()
         mother_trait = people[target["mother"]]["trait"] if target["mother"] in people else None
         father_trait = people[target["father"]]["trait"] if target["father"] in people else None
-        if target["trait"] is not None:  # 자신의 trait을 알 때
-            this_trait = target["trait"]
-            total = PROBS["trait"][0][this_trait] + PROBS["trait"][1][this_trait] + PROBS["trait"][2][this_trait]
-            for i in range(3):
-                gene_prob[i] = PROBS["trait"][i][this_trait] / total
-        elif mother_trait is not None and father_trait is not None:
+        if mother_trait is not None and father_trait is not None:
             inherited = inheritance(gene_number(people[target["mother"]]), gene_number(people[target["father"]]))
             for i in range(3):
                 gene_prob[i] = inherited[i]
@@ -173,6 +162,9 @@ def joint_probability(people, one_gene, two_genes, have_trait):
             inherited = inheritance(gene_number(known), PROBS["gene"])
             for i in range(3):
                 gene_prob[i] = inherited[i]
+        elif target["trait"] is not None:  # 자신의 trait을 알 때
+            for i in range(3):
+                gene_prob[i] = PROBS["trait"][i][target["trait"]] / PROBS["gene"][i]
         else:  # 아는 정보가 없을 때
             for i in range(3):
                 gene_prob[i] = PROBS["gene"][i]
