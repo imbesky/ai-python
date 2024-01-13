@@ -180,8 +180,11 @@ def joint_probability(people, one_gene, two_genes, have_trait):
 
     def trait_assumption(gene, target_trait):
         result = 0
+        """
+        trait 이 t일 확률= ["target"][n][t] / gene_prob[n] 의 합(n = 0~2)
+        """
         for i in range(3):
-            result += PROBS["trait"][i][target_trait] * gene[i]
+            result += PROBS["trait"][i][target_trait] / gene[i]
         return result
 
     for person in people:
