@@ -6,3 +6,5 @@ repository to save `AI studying with python` records based on lecture [CS50's In
 
 1. search
 2. knowledge
+3. uncertainty
+4. optimization
