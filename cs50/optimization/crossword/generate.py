@@ -204,23 +204,25 @@ class CrosswordCreator():
         counts = dict()
         values = []
         count = 0
-        neighbors = self.crossword.neighbors(var)
+
         for value in self.domains[var]:
             for neighbor in self.domains:
-                if neighbor not in assignment:
-                    overlap = self.crossword.overlaps[var, neighbor]
-                    if overlap is not None:
-                        for neighbor_value in self.domains[neighbor]:
-                            if neighbor_value == value:
-                                count += 1
-                                continue
-                            if value[overlap[0]] != neighbor_value[overlap[1]]:
-                                count += 1
-                    else:
-                        if value in self.domains[neighbor]:
+                if neighbor in assignment or neighbor == var:
+                    continue
+                overlap = self.crossword.overlaps[var, neighbor]
+                if overlap is not None:
+                    for neighbor_value in self.domains[neighbor]:
+                        if neighbor_value == value:
                             count += 1
+                            continue
+                        if value[overlap[0]] != neighbor_value[overlap[1]]:
+                            count += 1
+                else:
+                    if value in self.domains[neighbor]:
+                        count += 1
             counts[value] = count
             values.append(value)
+
         values.sort(key=lambda item: counts[item])
         return values
 
@@ -282,7 +284,7 @@ class CrosswordCreator():
             return assignment
 
         variable = self.select_unassigned_variable(assignment)
-        for value in self.domains[variable]:
+        for value in self.order_domain_values(variable, assignment):
             assignment[variable] = value
             inferences = None
             if self.consistent(assignment):
