@@ -214,7 +214,7 @@ def back-track(assignment, csp):
       result = back-track(assignment, csp)
       if result != fail:
         return result
-    assignment.remove({variable = value})
+      assignment.remove({variable = value})
   return fail
 ```
 
@@ -244,8 +244,8 @@ def back-track(assignment, csp):
       result = back-track(assignment, csp)
       if result != fail:
         return result
-    assignment.remove({variable = value})
-    assignment.remove(inferences)
+      assignment.remove({variable = value})
+      assignment.remove(inferences)
   return fail
 ```
 
