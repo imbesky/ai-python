@@ -1,6 +1,6 @@
 # Neural network 
 
-mimic human brain structure, neuran 
+mimic human brain structure, neuron 
 
 - neurons are connected to and receive electrical signals form other neurons
 - neurons process input signals and can be activated 
@@ -10,8 +10,8 @@ mimic human brain structure, neuran
 mathematical model for learning inspired by biological neural networks 
 
 - model mathematical function from inputs to outputs based on the structure and parameters of the network
-    - maps input to output based on the structure and parameters of the network
-- strunture of the network is shaped through training(learning) data 
+- maps input to output based on the structure and parameters of the network
+- structure of the network is shaped through training(learning) data 
 
 ### Activation functions 
 
